@@ -24,39 +24,20 @@ client.on('message', message => {
   if (!message.content.startsWith(process.env.PREFIX ||
     message.author.bot)) { return }
   if (message.content === '!dog') {
-    fetch_doggie(message)
-    local_doggie(message)
+    //fetch_doggie(message)
+    //local_doggie(message)
     send_doggie(message)
   }
 });
 
-const send_doggie = (message, url, breed) => {
-  let link = url || fetch_doggie(message, breed)
-  console.log(link)
-  message.channel.send("some text", {
-      file: "https://img.woofbot.io/husky/0da78c5d56e7224af247161a261a040f.jpg"
+const send_doggie = async (message, url, breed) => {
+  let link = url || await fetch_doggie(message, breed)
+  message.channel.send("Nice lil' doggie", {
+      file: link
   });
-  if (link) {
-    console.log(link)
-  }
 }
-
-const local_doggie = async (message) => {
-  const file = new Discord.Attachment('./Pictures/husky.jpg');
-
-  const exampleEmbed = {
-  	title: 'Some toitle',
-  	image: {
-  		url: 'attachment://husky.jpg',
-  	},
-  };
-  
-  message.channel.send({ files: [file], embed: exampleEmbed });
-}
-
 
 const fetch_doggie = async (message, breed) => {
-  console.log("fetch_doggie_message", breed);
   // From https://api.woofbot.io/v1/breeds
   let breeds = [
     "Corgi",
@@ -73,22 +54,32 @@ const fetch_doggie = async (message, breed) => {
     "Dachshund",
     "Boxer"
   ];
-  console.log(breed)
-  let searchBreed = breed || breeds[Math.floor(Math.random * breeds.length)]
-  console.log(searchBreed)
-  let val = await fetch('https://api.woofbot.io/v1/breeds/Husky/image')
-  .then(x => x.json())
-  .then(x => x['response']['url'])
-  /*
-  let embed = new Discord.RichEmbed()
-  .setTitle("Doggie")
-	.setColor('#0099ff')
-	.setDescription('Some description here')
-  .setURL(val)
-	.setThumbnail(val)
-  .setTimestamp()
-  message.channel.send(embed)
-  */
+  let searchBreed = breed || breeds[Math.floor(Math.random() * breeds.length)]
+  console.log("fetch_doggie, searchbreed", searchBreed)
+  return new Promise((resolve, reject) => {
+    let val = fetch(`https://api.woofbot.io/v1/breeds/${searchBreed}/image`)
+    .then(x => x.json())
+    .then(x => x['response']['url'])
+    .catch(error => {
+      console.log(error)
+      reject(error)
+    })
+    console.log("Fetch_doggie val", val)
+    resolve(val)
+  })
+}
+
+const local_doggie = async (message) => {
+  const file = new Discord.Attachment('./Pictures/husky.jpg');
+
+  const exampleEmbed = {
+  	title: 'Nice lil\'doggie',
+  	image: {
+  		url: 'attachment://husky.jpg',
+  	},
+  };
+  
+  message.channel.send({ files: [file], embed: exampleEmbed });
 }
 
 // login to Discord with your app's token
