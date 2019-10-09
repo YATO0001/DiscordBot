@@ -4,11 +4,12 @@ const Discord = require('discord.js');
 const fetch = require('node-fetch');
 // Reading files
 const fs = require('fs');
-
+// Https for getting images from internet
+const https = require('https');
 // create a new Discord client
 const client = new Discord.Client();
 
-
+// Set up dotenv
 require('dotenv').config()
 
 // when the client is ready, run this code
@@ -22,37 +23,56 @@ client.on('message', message => {
   if (!message.content.startsWith(process.env.PREFIX ||
     message.author.bot)) { return }
   if (message.content === '!dog') {
-    fetch_doggie(message)
-    local_doggie(message)
+    send_doggie(message)
   }
 });
 
+const send_doggie = async (message, url, breed) => {
+  let link = url || await fetch_doggie(message, breed)
+  message.channel.send("Nice lil' doggie", {
+      file: link
+  });
+}
+
+const fetch_doggie = async (message, breed) => {
+  // From https://api.woofbot.io/v1/breeds
+  let breeds = [
+    "Corgi",
+    "Shiba",
+    "Golden Retriever",
+    "Pitbull",
+    "Husky",
+    "Samoyed",
+    "Beagle",
+    "Cocker Spaniel",
+    "German Shepherd",
+    "Greyhound",
+    "Pomeranian",
+    "Dachshund",
+    "Boxer"
+  ];
+  let searchBreed = breed || breeds[Math.floor(Math.random() * breeds.length)]
+  return new Promise((resolve, reject) => {
+    let val = fetch(`https://api.woofbot.io/v1/breeds/${searchBreed}/image`)
+    .then(x => x.json())
+    .then(x => x['response']['url'])
+    .catch(error => {
+      console.log(error)
+      reject(error)
+    })
+    resolve(val)
+  })
+}
+
 const local_doggie = async (message) => {
   const file = new Discord.Attachment('./Pictures/husky.jpg');
-
   const exampleEmbed = {
-  	title: 'Some toitle',
+  	title: 'Nice lil\'doggie',
   	image: {
   		url: 'attachment://husky.jpg',
   	},
   };
-  
   message.channel.send({ files: [file], embed: exampleEmbed });
-}
-
-const fetch_doggie = async (message) => {
-  console.log("fetch_doggie_message", message)
-  let val = await fetch('https://api.woofbot.io/v1/breeds/Husky/image')
-  .then(x => x.json())
-  .then(x => x['response']['url'])
-  let embed = new Discord.RichEmbed()
-  .setTitle("Doggie")
-	.setColor('#0099ff')
-	.setDescription('Some description here')
-  .setURL(val)
-	.setThumbnail(val)
-  .setTimestamp()
-  message.channel.send(embed)
 }
 
 // login to Discord with your app's token
