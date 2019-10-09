@@ -6,11 +6,10 @@ const fetch = require('node-fetch');
 const fs = require('fs');
 // Https for getting images from internet
 const https = require('https');
-
 // create a new Discord client
 const client = new Discord.Client();
 
-
+// Set up dotenv
 require('dotenv').config()
 
 // when the client is ready, run this code
@@ -24,8 +23,6 @@ client.on('message', message => {
   if (!message.content.startsWith(process.env.PREFIX ||
     message.author.bot)) { return }
   if (message.content === '!dog') {
-    //fetch_doggie(message)
-    //local_doggie(message)
     send_doggie(message)
   }
 });
@@ -55,7 +52,6 @@ const fetch_doggie = async (message, breed) => {
     "Boxer"
   ];
   let searchBreed = breed || breeds[Math.floor(Math.random() * breeds.length)]
-  console.log("fetch_doggie, searchbreed", searchBreed)
   return new Promise((resolve, reject) => {
     let val = fetch(`https://api.woofbot.io/v1/breeds/${searchBreed}/image`)
     .then(x => x.json())
@@ -64,21 +60,18 @@ const fetch_doggie = async (message, breed) => {
       console.log(error)
       reject(error)
     })
-    console.log("Fetch_doggie val", val)
     resolve(val)
   })
 }
 
 const local_doggie = async (message) => {
   const file = new Discord.Attachment('./Pictures/husky.jpg');
-
   const exampleEmbed = {
   	title: 'Nice lil\'doggie',
   	image: {
   		url: 'attachment://husky.jpg',
   	},
   };
-  
   message.channel.send({ files: [file], embed: exampleEmbed });
 }
 
