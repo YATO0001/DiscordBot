@@ -28,13 +28,6 @@ client.on('message', message => {
 });
 
 const send_doggie = async (message, url, breed) => {
-  let link = url || await fetch_doggie(message, breed)
-  message.channel.send("Nice lil' doggie", {
-      file: link
-  });
-}
-
-const fetch_doggie = async (message, breed) => {
   // From https://api.woofbot.io/v1/breeds
   let breeds = [
     "Corgi",
@@ -52,8 +45,17 @@ const fetch_doggie = async (message, breed) => {
     "Boxer"
   ];
   let searchBreed = breed || breeds[Math.floor(Math.random() * breeds.length)]
+  let link = url || await fetch_doggie(message, searchBreed)
+  console.log("link", link)
+  message.channel.send(`Here's a nice lil' ${searchBreed}`, {
+      file: link
+  });
+}
+
+const fetch_doggie = async (message, breed) => {
+  console.log(message, breed)
   return new Promise((resolve, reject) => {
-    let val = fetch(`https://api.woofbot.io/v1/breeds/${searchBreed}/image`)
+    let val = fetch(`https://api.woofbot.io/v1/breeds/${breed}/image`)
     .then(x => x.json())
     .then(x => x['response']['url'])
     .catch(error => {
