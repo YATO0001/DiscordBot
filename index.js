@@ -9,6 +9,8 @@ const https = require('https');
 // create a new Discord client
 const client = new Discord.Client();
 
+const { prefix } = require('./config.json')
+
 // Set up dotenv
 require('dotenv').config()
 
@@ -20,7 +22,7 @@ client.once('ready', () => {
 
 client.on('message', message => {
 	console.log(message.content);
-  if (!message.content.startsWith(process.env.PREFIX ||
+  if (!message.content.startsWith(prefix ||
     message.author.bot)) { return }
   if (message.content === '!dog') {
     send_doggie(message)
