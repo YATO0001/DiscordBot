@@ -27,6 +27,7 @@ client.on('message', message => {
   if (message.content === '!dog') {
     send_doggie(message)
   }
+  message.channel.send(´That is not a recognised command ${message.member.displayName`)
 });
 
 const send_doggie = async (message, url, breed) => {
