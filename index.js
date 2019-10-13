@@ -15,7 +15,7 @@ require('dotenv').config()
 // when the client is ready, run this code
 // this event will only trigger one time after logging in
 client.once('ready', () => {
-	console.log('Ready!');
+	console.log(`${client.user.username} is ready for action`);
 });
 
 client.on('message', message => {
