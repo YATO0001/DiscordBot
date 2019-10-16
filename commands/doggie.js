@@ -1,4 +1,5 @@
 const fetch = require('node-fetch');
+const { RichEmbed  } = require('discord.js')
 
 exports.run = async (client, message, args) => {
   console.log("dog")
@@ -27,9 +28,16 @@ exports.run = async (client, message, args) => {
     .then(x => x.json())
     .then(x => x['response']['url'])
     .catch(error => {console.log(error)})
+  let embed = new RichEmbed()
+    .setTitle(`Heres a nice lil' ${searchBreed}`)
+    .setAuthor(message.member.user.tag, message.member.avatarURL)
+    .setImage(link)
+  message.channel.send(embed)
+  /*
   message.channel.send(`Here's a nice lil' ${searchBreed.replace("_", " ")}`, {
       file: link
   });
+  */
 }
 
 exports.help = {
