@@ -18,7 +18,11 @@
   },
   "homepage": "https://github.com/larsmhar/DiscordBot#readme",
   "dependencies": {
+    "discord.js": "^11.5.1",
     "dotenv": "^8.1.0",
+    "enmap": "^5.2.0",
+    "fs": "0.0.1-security",
+    "https": "^1.0.0",
     "node-fetch": "^2.6.0"
   }
 }
