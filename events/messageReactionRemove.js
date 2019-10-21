@@ -13,10 +13,12 @@ module.exports = async (client, messageReaction, user) => {
     "member": message.guild.roles.get('632944351009570846')
   }
 
-	if (['🇦', '🇧', '🇨'].includes(messageReaction.emoji.name) && message.channel.id === channel.id) {
+	if (emoji.includes(messageReaction.emoji.name) && message.channel.id === channel.id) {
+		console.log("Role deleting")
 		switch (messageReaction.emoji.name) {
 			case emoji[0]:
-				member.removeRole(roles[emoji[0]]).catch(console.error);
+				console.log("Deleting member")
+				member.removeRole(roles["member"]).catch(console.error);
 				break;
 		}
 	}
