@@ -12,6 +12,8 @@ and then
 
 If you intend to change the code `nodemon` is suggested as it auto restarts the project as changes are made.
 
+#### TODO
+Add settings, config.json, dotenv, and how to customize it to fit your own server
 
 ## Thanks to
 Quite a chunk of the code is copied and modified, some of it to a lesser degree, from https://anidiots.guide/first-bot/a-basic-command-handler, so thanks to the amazing resources there.
